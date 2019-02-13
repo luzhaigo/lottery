@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1>Lottery Game</h1>
     <lottery></lottery>
   </div>
 </template>

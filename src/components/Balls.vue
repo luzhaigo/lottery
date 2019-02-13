@@ -20,6 +20,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    animationValue: {
+      type: Array,
+      default: () => [],
+    },
+    running: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
@@ -27,6 +35,18 @@ export default {
     }
   },
   mounted() {
+    this.$nextTick(() => {
+      const rect = this.$refs.row.getBoundingClientRect();
+      const width = Math.round(rect.width / 4);
+      const height = rect.height
+      if (width > height) {
+        this.diameter = height - 5;
+      } else {
+        this.diameter = width - 5;
+      }
+    });
+  },
+  updated() {
     this.$nextTick(() => {
       const rect = this.$refs.row.getBoundingClientRect();
       const width = Math.round(rect.width / 4);
@@ -47,9 +67,14 @@ export default {
       return s;
     },
     color(value) {
-      const index = this.matchedBalls.indexOf(value);
-      if (index !== -1) {
-        return index < 3 ? 'yellow' : 'red';
+      if (this.animationValue.includes(value)) {
+        return 'blue'
+      }
+      if (!this.running) {
+        const index = this.matchedBalls.indexOf(value);
+        if (index !== -1) {
+          return index < 3 ? '#fff2ca' : '#e99695';
+        }
       }
     }
   }

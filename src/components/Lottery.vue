@@ -2,7 +2,14 @@
   <div id="lottery">
     <div class="panel left">
       <div class="number-panel left">
-        <balls v-for="(balls, index) in ballsArray" :balls="balls" :key="index" class="flex" :matchedBalls="drawResult"></balls>
+        <balls 
+          v-for="(balls, index) in ballsArray" 
+          :balls="balls" 
+          :key="index" 
+          class="flex" 
+          :matchedBalls="drawResult" 
+          :animationValue="animationValue"
+          :running="running"></balls>
       </div>
       <button id="draw-button" @click="startDraw">Draw</button>
     </div>
@@ -12,7 +19,7 @@
       </div>
       <div class="number-panel right">
         <template v-if="ballsHistory.length">
-          <balls v-for="(balls, index) in ballsHistory.slice(1, 5)" :balls="balls" :key="index" class="flex"></balls>
+          <balls v-for="(balls, index) in fourDraws" :balls="balls" :key="index" class="flex"></balls>
         </template>
       </div>
     </div>
@@ -30,10 +37,43 @@ export default {
       ballsArray: [[1,2,3,4], [5, 6, 7, 8], [9, 10, 11, 12],[13, 14, 15, 16]],
       drawResult: [],
       ballsHistory: [],
+      running: false,
+      animationValue: [],
     }
+  },
+  computed: {
+    fourDraws() {
+      const arr = this.ballsHistory.slice(1, 5)
+      for (let i = 4 - arr.length;i--;i>0) {
+        arr.push([])
+      }
+      return arr;
+    }
+  },
+  watch: {
+    running(newV, oldV) {
+      if(newV && !oldV) {
+        this.timerID = setInterval(() => {
+          this.animationValue = this.generateDraw();
+        },100)
+      } else {
+        clearInterval(this.timerID);
+        this.animationValue = [];
+      }
+    },
   },
   methods: {
     startDraw() {
+      if (this.running) return;
+      setTimeout(() => {
+        const drawResult = this.generateDraw();
+        this.running = false;
+        this.drawResult = drawResult;
+        this.ballsHistory.unshift(drawResult)
+      }, 3000);
+      this.running = true;
+    },
+    generateDraw() {
       const drawResult = [];
       for(;;) {
         const ball = Math.floor(Math.random() * 16) + 1
@@ -41,9 +81,9 @@ export default {
           drawResult.push(ball)
         if (drawResult.length === 4)
           break;
-      }this.drawResult = drawResult;
-      this.ballsHistory.unshift(drawResult)
-    },
+      }
+      return drawResult
+    }
   }
 }
 </script>
@@ -76,9 +116,10 @@ export default {
     border-radius: 5px;
     display: flex;
     flex-flow: column;
-    padding: 0 20px;
+    padding: 10px 20px;
   }
   .number-panel {
+    box-sizing: border-box;
     padding: 20px;
     border: 1px solid black;
     height: 75%;
