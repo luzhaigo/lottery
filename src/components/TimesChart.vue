@@ -81,13 +81,10 @@ export default {
     },
   },
   watch: {
-    ballCounts: {
-      handler() {
-        this.handler.$emit('dispatch', (chart) => {
-          chart.load(this.data)
-        });
-      },
-      deep: true,
+    ballCounts() {
+      this.handler.$emit('dispatch', (chart) => {
+        chart.load(this.data)
+      });
     }
   },
   mounted() {

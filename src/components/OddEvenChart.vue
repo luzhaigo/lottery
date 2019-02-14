@@ -46,13 +46,10 @@ export default {
     },
   },
   watch: {
-    oddEven: {
-      handler() {
-        this.handler.$emit('dispatch', (chart) => {
-          chart.load(this.data)
-        });
-      },
-      deep: true,
+    oddEven() {
+      this.handler.$emit('dispatch', (chart) => {
+        chart.load(this.data)
+      });
     }
   },
   mounted() {
