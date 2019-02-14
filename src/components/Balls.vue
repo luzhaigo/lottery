@@ -1,9 +1,8 @@
 <template>
 <div class="row" ref="row">
-  <div class="ball" v-for="value in balls" :key="value" :style="{
+  <div v-for="value in balls" :key="value" :class="['ball', ballClass(value)]" :style="{
       width: `${diameter}px`,
       height: `${diameter}px`,
-      'background-color': color(value),
     }">
       {{toString(value)}}
   </div>
@@ -66,14 +65,14 @@ export default {
       }
       return s;
     },
-    color(value) {
+    ballClass(value) {
       if (this.animationValue.includes(value)) {
-        return 'blue'
+        return 'animation'
       }
       if (!this.running) {
         const index = this.matchedBalls.indexOf(value);
         if (index !== -1) {
-          return index < 3 ? '#fff2ca' : '#e99695';
+          return index < 3 ? 'normal' : 'special';
         }
       }
     }
@@ -92,6 +91,16 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    &.animation {
+      background-color: blue;
+      color: white;
+    }
+    &.normal {
+      background-color: #fff2ca;
+    }
+    &.special {
+      background-color: #e99695;
+    }
   }
 }
 </style>

@@ -144,5 +144,6 @@ export default {
   border-radius: 5px;
   border: 1px solid black;
   font-size: 16px;
+  cursor: pointer;
 }
 </style>
