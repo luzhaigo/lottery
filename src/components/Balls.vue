@@ -34,28 +34,14 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      const rect = this.$refs.row.getBoundingClientRect();
-      const width = Math.round(rect.width / 4);
-      const height = rect.height
-      if (width > height) {
-        this.diameter = height - 5;
-      } else {
-        this.diameter = width - 5;
-      }
-    });
+    this.$nextTick(this.setDiameter);
+    this.resize = window.addEventListener('resize', this.setDiameter)
   },
   updated() {
-    this.$nextTick(() => {
-      const rect = this.$refs.row.getBoundingClientRect();
-      const width = Math.round(rect.width / 4);
-      const height = rect.height
-      if (width > height) {
-        this.diameter = height - 5;
-      } else {
-        this.diameter = width - 5;
-      }
-    });
+    this.$nextTick(this.setDiameter);
+  },
+  beforeDestroy() {
+    window.removeEventListener(this.resize)
   },
   methods: {
     toString(value) {
@@ -74,6 +60,16 @@ export default {
         if (index !== -1) {
           return index < 3 ? 'normal' : 'special';
         }
+      }
+    },
+    setDiameter() {
+      const rect = this.$refs.row.getBoundingClientRect();
+      const width = Math.round(rect.width / 4);
+      const height = rect.height
+      if (width > height) {
+        this.diameter = height - 5;
+      } else {
+        this.diameter = width - 5;
       }
     }
   }
