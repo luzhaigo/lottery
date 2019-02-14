@@ -15,10 +15,10 @@
     </div>
     <div class="panel right">
       <div class="latest-draw">
-        <balls v-if="ballsHistory[0]" :balls="ballsHistory[0]" class="flex" :matchedBalls="drawResult"></balls>
+        <balls v-if="drawHistory[0]" :balls="drawHistory[0]" class="flex" :matchedBalls="drawResult"></balls>
       </div>
       <div class="number-panel right">
-        <template v-if="ballsHistory.length">
+        <template v-if="drawHistory.length">
           <balls v-for="(balls, index) in fourDraws" :balls="balls" :key="index" class="flex"></balls>
         </template>
       </div>
@@ -36,14 +36,14 @@ export default {
     return {
       ballsArray: [[1,2,3,4], [5, 6, 7, 8], [9, 10, 11, 12],[13, 14, 15, 16]],
       drawResult: [],
-      ballsHistory: [],
+      drawHistory: [],
       running: false,
       animationValue: [],
     }
   },
   computed: {
     fourDraws() {
-      const arr = this.ballsHistory.slice(1, 5)
+      const arr = this.drawHistory.slice(1, 5)
       for (let i = 4 - arr.length;i--;i>0) {
         arr.push([])
       }
@@ -69,7 +69,8 @@ export default {
         const drawResult = this.generateDraw();
         this.running = false;
         this.drawResult = drawResult;
-        this.ballsHistory.unshift(drawResult)
+        this.drawHistory.unshift(drawResult)
+        this.$emit('update:drawHistory', this.drawHistory)
       }, 3000);
       this.running = true;
     },
