@@ -24,8 +24,8 @@ export default {
     data() {
       return  {
         columns: [
-          ['odd'].concat(this.oddEven[0]),
-          ['even'].concat(this.oddEven[1]),
+          ['even'].concat(this.oddEven[0]),
+          ['odd'].concat(this.oddEven[1]),
         ],
         type: 'pie',
       }
