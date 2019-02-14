@@ -3,19 +3,19 @@
   <div class="th-ball-area">
     <div class="w-50">
       <h2>The First Ball</h2>
-      <times-chart :ballCounts="firstBallCounts"></times-chart>
+      <times-chart :ballCounts="firstBallCounts" color="#fff2ca"></times-chart>
     </div>
     <div class="w-50">
       <h2>The Second Ball</h2>
-      <times-chart :ballCounts="secondBallCounts"></times-chart>
+      <times-chart :ballCounts="secondBallCounts" color="#fff2ca"></times-chart>
     </div>
     <div class="w-50">
       <h2>The Third Ball</h2>
-      <times-chart :ballCounts="thirdBallCounts"></times-chart>
+      <times-chart :ballCounts="thirdBallCounts" color="#fff2ca"></times-chart>
     </div>
     <div class="w-50">
-      <h2>The Forth Ball</h2>
-      <times-chart :ballCounts="forthallCounts"></times-chart>
+      <h2>The Fourth Ball</h2>
+      <times-chart :ballCounts="fourthallCounts" color="#e99695"></times-chart>
     </div>
   </div>
   <div class="other-area">
@@ -54,7 +54,7 @@ export default {
       firstBallCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       secondBallCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       thirdBallCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      forthallCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      fourthallCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       oddEven: [0, 0],
     }
   },
@@ -79,7 +79,7 @@ export default {
               break;
             }
             case 3:{
-              this.$set(this.forthallCounts, value-1, this.forthallCounts[value-1] + 1)
+              this.$set(this.fourthallCounts, value-1, this.fourthallCounts[value-1] + 1)
               break;
             }
             default:

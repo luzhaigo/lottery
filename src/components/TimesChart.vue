@@ -10,6 +10,9 @@ export default {
   props: {
     ballCounts: {
       type: Array,
+    },
+    color: {
+      type: String,
     }
   },
   components: {
@@ -27,6 +30,9 @@ export default {
           [' '].concat(this.ballCounts),
         ],
         type: 'bar',
+        colors: {
+          ' ': this.color,
+        }
       }
     },
     options() {
