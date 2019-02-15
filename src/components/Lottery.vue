@@ -2,20 +2,26 @@
   <div id="lottery">
     <div class="panel left">
       <div class="number-panel left">
-        <balls 
-          v-for="(balls, index) in ballsArray" 
-          :balls="balls" 
-          :key="index" 
-          class="flex" 
-          :matchedBalls="drawResult" 
-          :animationValue="animationValue"
-          :running="running"></balls>
+        <template v-if="!modelType">
+          <div class="container">
+            <balls
+              v-for="(balls, index) in ballsArray" 
+              :balls="balls" 
+              :key="index" 
+              class="flex" 
+              :matchedBalls="drawResult" 
+              :animationValue="animationValue"
+              :running="running">
+            </balls>
+          </div>
+        </template>
+        <ball-pool v-else :running="running" @updateTrigger="trigger = $event" :matchedBalls="drawResult"></ball-pool>
       </div>
-      <button id="draw-button" @click="startDraw">Draw</button>
+      <button id="draw-button" @click="drawButtonClick">Draw</button>
     </div>
     <div class="panel right">
       <div class="latest-draw">
-        <balls v-if="drawHistory[0]" :balls="drawHistory[0]" class="flex" :matchedBalls="drawResult"></balls>
+        <balls v-if="drawHistory[0]" :balls="drawHistory[0]" class="flex" :matchedBalls="lastDrawResult"></balls>
       </div>
       <div class="number-panel right">
         <template v-if="drawHistory.length">
@@ -28,9 +34,17 @@
 
 <script>
 import Balls from './Balls.vue';
+import BallPool from './BallPool.vue';
+
 export default {
+  props: {
+    modelType: {
+      type: Number,
+    }
+  },
   components: {
     Balls,
+    BallPool,
   },
   data() {
     return {
@@ -39,6 +53,8 @@ export default {
       drawHistory: [],
       running: false,
       animationValue: [],
+      trigger: false,
+      lastDrawResult: [],
     }
   },
   computed: {
@@ -52,6 +68,7 @@ export default {
   },
   watch: {
     running(newV, oldV) {
+      if (this.modelType) return 
       if(newV && !oldV) {
         this.timerID = setInterval(() => {
           this.animationValue = this.generateDraw();
@@ -61,13 +78,30 @@ export default {
         this.animationValue = [];
       }
     },
+    trigger(newV, oldV) {
+      if (!newV && oldV) {
+        this.lastDrawResult = this.drawResult
+        this.drawHistory.unshift(this.drawResult)
+        this.$emit('update:disabled', false)
+        this.$emit('update:drawHistory', this.drawHistory)
+      }
+    },
+    modelType() {
+      this.running = false
+    }
   },
   methods: {
+    drawButtonClick() {
+      this.$emit('update:disabled', true)
+      !this.modelType ? this.startDraw() : this.startAnimationDraw()
+    },
     startDraw() {
       if (this.running) return;
       setTimeout(() => {
         const drawResult = this.generateDraw();
         this.running = false;
+        this.$emit('update:disabled', false)
+        this.lastDrawResult = drawResult;
         this.drawResult = drawResult;
         this.drawHistory.unshift(drawResult)
         this.$emit('update:drawHistory', this.drawHistory)
@@ -84,6 +118,18 @@ export default {
           break;
       }
       return drawResult
+    },
+    startAnimationDraw() {
+      if (this.trigger) return
+      if (this.running) {
+        this.running = false;
+      }
+      this.$nextTick(() => {
+        this.trigger = true;
+        this.running = true
+        const drawResult = this.generateDraw();
+        this.drawResult = drawResult;
+      })
     }
   }
 }
@@ -121,17 +167,24 @@ export default {
   }
   .number-panel {
     box-sizing: border-box;
-    padding: 20px;
     border: 1px solid black;
     height: 75%;
     border-radius: 5px;
     display: flex;
     flex-flow: column;
+    overflow: hidden;
     &.left {
       margin-bottom: 20px;
     }
     &.right {
+      padding: 20px;
       margin-top: 5px;
+    }
+    .container {
+      height: 100%;
+      display: flex;
+      flex-flow: column;
+      padding: 20px;
     }
   }
 }

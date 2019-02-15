@@ -34,14 +34,11 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(this.setDiameter);
-    this.resize = window.addEventListener('resize', this.setDiameter)
-  },
-  updated() {
-    this.$nextTick(this.setDiameter);
+    this.setDiameter()
+    window.addEventListener('resize', this.setDiameter)
   },
   beforeDestroy() {
-    window.removeEventListener(this.resize)
+    window.removeEventListener('resize', this.setDiameter)
   },
   methods: {
     toString(value) {
